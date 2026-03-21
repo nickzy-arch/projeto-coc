@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Console Admin | COC</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 p-6 font-sans">
+    <div id="login-box" class="max-w-md mx-auto mt-20 bg-white p-10 rounded-2xl shadow-xl border">
+        <h2 class="text-xl font-black text-center mb-8 uppercase tracking-widest">Admin Access</h2>
+        <input type="text" id="u" placeholder="User" class="w-full border p-4 mb-4 rounded-xl outline-none">
+        <input type="password" id="p" placeholder="Password" class="w-full border p-4 mb-8 rounded-xl outline-none">
+        <button onclick="auth()" class="w-full bg-slate-900 text-white p-4 rounded-xl font-bold">ENTRAR</button>
+    </div>
+
+    <div id="panel" class="hidden max-w-6xl mx-auto">
+        <header class="flex justify-between items-center mb-10 border-b pb-6">
+            <h1 class="text-2xl font-black text-slate-900 uppercase">Gestão Acadêmica <span class="text-emerald-500">COC</span></h1>
+            <div class="flex gap-4">
+                <button onclick="exportTxt()" class="bg-white border px-4 py-2 rounded-lg text-xs font-bold uppercase hover:bg-gray-50">Exportar .TXT</button>
+                <button onclick="location.reload()" class="text-red-500 font-bold text-xs uppercase underline">Sair</button>
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10 text-center">
+            <div class="bg-white p-6 rounded-xl shadow-sm border"><p class="text-[10px] text-gray-400 font-black uppercase">Avaliações</p><h2 id="st-total" class="text-3xl font-black">0</h2></div>
+            <div class="bg-white p-6 rounded-xl shadow-sm border"><p class="text-[10px] text-gray-400 font-black uppercase">Acesso Único</p><h2 class="text-3xl font-black text-emerald-500 italic">Ativo</h2></div>
+            <div class="bg-white p-6 rounded-xl shadow-sm border"><p class="text-[10px] text-gray-400 font-black uppercase">Relatório</p><button onclick="clearRank()" class="text-xs text-red-500 font-bold">LIMPAR TUDO</button></div>
+        </div>
+
+        <div class="grid lg:grid-cols-2 gap-8">
+            <div class="bg-white rounded-xl shadow-sm border h-[500px] overflow-y-auto">
+                <table class="w-full text-left text-xs">
+                    <thead class="bg-gray-100 text-gray-500 sticky top-0 uppercase"><tr><th class="p-4">Aluno</th><th class="p-4">Série</th><th class="p-4 text-right">Score</th></tr></thead>
+                    <tbody id="table-body"></tbody>
+                </table>
+            </div>
+            <div class="bg-slate-900 rounded-xl p-6 shadow-2xl h-[500px] overflow-y-auto text-emerald-400 font-mono text-[10px] space-y-1">
+                <div class="text-white border-b border-slate-700 mb-2 pb-1 underline">LIVE LOGS:</div>
+                <div id="log-content"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let rawData = [];
+        function auth() {
+            if(document.getElementById('u').value === "AdminCOC26" && document.getElementById('p').value === "nigubura") {
+                document.getElementById('login-box').style.display = 'none';
+                document.getElementById('panel').classList.remove('hidden');
+                refresh(); setInterval(refresh, 3000);
+            } else { alert("Acesso Negado."); }
+        }
+        async function refresh() {
+            const res = await fetch('/api/admin/status');
+            const data = await res.json();
+            rawData = data.r;
+            document.getElementById('st-total').innerText = data.r.length;
+            document.getElementById('table-body').innerHTML = data.r.map(p => `<tr class="border-b"><td class="p-4 font-bold text-slate-700">${p.name}</td><td class="p-4 text-gray-400">${p.grade}</td><td class="p-4 text-right font-black text-emerald-600">${p.score}</td></tr>`).join('');
+            document.getElementById('log-content').innerHTML = data.l.slice().reverse().map(line => `<div>> ${line}</div>`).join('');
+        }
+        function exportTxt() {
+            let t = "RELATORIO COC\n\n";
+            rawData.forEach(p => t += `ALUNO: ${p.name} | SERIE: ${p.grade} | SCORE: ${p.score} | DATA: ${p.date}\n`);
+            const blob = new Blob([t], {type: "text/plain"});
+            const a = document.createElement("a");
+            a.href = URL.createObjectURL(blob);
+            a.download = "relatorio_coc.txt";
+            a.click();
+        }
+        async function clearRank() { if(confirm("LIMPAR TUDO?")) { await fetch('/api/admin/clear', {method: 'POST'}); refresh(); } }
+    </script>
+</body>
+</html>
