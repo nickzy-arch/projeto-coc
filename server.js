@@ -9,7 +9,7 @@ let ranking = [];
 let bannedUsers = [];
 let logs = [`[SISTEMA] Iniciado em ${new Date().toLocaleString()}`];
 
-// 15 QUESTÕES POR TURMA (INGLÊS COC)
+// BANCO DE 90 QUESTÕES (15 POR TURMA)
 const bancoQuestoes = {
     "7": [
         { q: "Past of 'Go'?", a: "Went", o: ["Goes", "Went", "Gone", "Going"] },
@@ -33,7 +33,7 @@ const bancoQuestoes = {
         { q: "Superlative of 'Good'?", a: "The best", o: ["The better", "The best", "The goodest", "The most good"] },
         { q: "He ___ TV every day.", a: "watches", o: ["watch", "watches", "watching", "watched"] },
         { q: "Past of 'Write'?", a: "Wrote", o: ["Writed", "Written", "Wrote", "Writing"] },
-        { q: "Meaning of 'Actually'?", a: "Actually", o: ["Currently", "Now", "In fact", "Always"] },
+        { q: "Meaning of 'Actually'?", a: "Na verdade", o: ["Atualmente", "Agora", "Na verdade", "Sempre"] },
         { q: "___ you ever been to NYC?", a: "Have", o: ["Has", "Have", "Did", "Do"] },
         { q: "I'm interested ___ music.", a: "in", o: ["at", "on", "in", "for"] },
         { q: "Opposite of 'Cheap'?", a: "Expensive", o: ["Easy", "Cheap", "Expensive", "Fast"] },
@@ -115,12 +115,23 @@ const bancoQuestoes = {
     ]
 };
 
-// --- ROTAS DO JOGO ---
+// --- SEGURANÇA: CHECAGEM DE LOGIN FIXO ---
 app.post('/api/check-auth', (req, res) => {
     const { name, token } = req.body;
+    
+    // Se estiver banido, tchau
     if (bannedUsers.includes(name)) return res.json({ status: 'banned' });
-    const user = ranking.find(u => u.name === name);
-    if (user && user.token !== token) return res.json({ status: 'taken' });
+
+    // Procura se o nome já existe no ranking
+    const existingUser = ranking.find(u => u.name === name);
+    
+    if (existingUser) {
+        // Se o nome existe mas o Token é diferente, significa que outro computador está tentando usar o nome
+        if (existingUser.token !== token) {
+            return res.json({ status: 'taken' });
+        }
+    }
+    
     res.json({ status: 'ok' });
 });
 
@@ -130,16 +141,20 @@ app.post('/api/submit', (req, res) => {
     
     const index = ranking.findIndex(u => u.name === name);
     if (index !== -1) {
-        if (ranking[index].token === token) ranking[index].score = score;
+        // Só atualiza se o token bater com o dono original
+        if (ranking[index].token === token) {
+            ranking[index].score = score;
+        }
     } else {
         ranking.push({ name, grade, score, token, date: new Date().toLocaleTimeString() });
     }
+    
     ranking.sort((a, b) => b.score - a.score);
-    logs.push(`[PONTOS] ${name} (${grade}): ${score} pts`);
+    logs.push(`[SISTEMA] ${name} atualizou pontos: ${score}`);
     res.json({ s: true });
 });
 
-// --- ADMIN ---
+// --- ADMIN ROUTES ---
 app.get('/api/admin/data', (req, res) => res.json({ ranking, logs, bannedUsers }));
 app.post('/api/admin/ban', (req, res) => {
     const { name } = req.body;
@@ -151,4 +166,4 @@ app.post('/api/admin/ban', (req, res) => {
 app.get('/api/questions/:grade', (req, res) => res.json(bancoQuestoes[req.params.grade] || []));
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log("RODANDO COM 90 QUESTÕES"));
+app.listen(PORT, () => console.log("RODANDO SISTEMA"));
