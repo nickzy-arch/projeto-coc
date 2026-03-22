@@ -2,110 +2,82 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CENTRAL DE COMANDO - COC ENGLISH</title>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <title>Dashboard Pro | COC Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        :root { --neon: #00ff41; --bg: #0a0a0a; --red: #ff3e3e; }
-        body { background: var(--bg); color: var(--neon); font-family: 'JetBrains Mono', monospace; margin: 0; padding: 20px; }
-        h1 { text-align: center; border-bottom: 2px solid var(--neon); padding-bottom: 10px; text-transform: uppercase; letter-spacing: 3px; }
-        
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .box { border: 1px solid var(--neon); padding: 15px; background: rgba(0, 255, 65, 0.05); box-shadow: 0 0 10px rgba(0, 255, 65, 0.2); }
-        h3 { margin-top: 0; border-left: 4px solid var(--neon); padding-left: 10px; }
-
-        input { background: #000; border: 1px solid var(--neon); color: var(--neon); padding: 8px; width: 60%; font-family: inherit; }
-        button { background: var(--neon); color: #000; border: none; padding: 8px 15px; cursor: pointer; font-weight: bold; text-transform: uppercase; }
-        button:hover { background: #fff; box-shadow: 0 0 15px var(--neon); }
-        .btn-red { background: var(--red); color: #fff; }
-
+        :root { --main: #6366f1; --red: #f43f5e; --bg: #0b0f1a; --card: #161b2c; }
+        body { background: var(--bg); color: #e2e8f0; font-family: 'Inter', sans-serif; margin: 0; padding: 30px; }
+        .container { max-width: 1000px; margin: auto; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .grid { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
+        .card { background: var(--card); border-radius: 16px; padding: 25px; border: 1px solid #2d3748; }
+        h2 { margin-top: 0; color: var(--main); font-size: 1.2rem; }
         table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th { background: var(--neon); color: #000; padding: 10px; text-align: left; }
-        td { border-bottom: 1px solid #333; padding: 8px; }
-
-        #logBox { height: 150px; overflow-y: auto; font-size: 12px; background: #000; padding: 10px; border: 1px inset #333; }
-        .stat-card { display: inline-block; padding: 10px; border: 1px solid var(--neon); margin-right: 10px; min-width: 80px; text-align: center; }
-        
-        @media (max-width: 768px) { .grid { grid-template-columns: 1fr; } }
+        th { text-align: left; color: #718096; font-size: 0.8rem; padding: 10px; border-bottom: 1px solid #2d3748; }
+        td { padding: 12px 10px; border-bottom: 1px solid #1a202c; }
+        .btn-ban { background: rgba(244, 63, 94, 0.1); color: var(--red); border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        .btn-ban:hover { background: var(--red); color: white; }
+        .log-item { font-size: 0.85rem; padding: 5px 0; border-bottom: 1px solid #1a202c; color: #a0aec0; }
     </style>
 </head>
 <body>
-
-    <h1>🛰️ COC SYSTEM MODERATION</h1>
-
-    <div class="grid">
-        <div class="box">
-            <h3>🏆 RANKING GLOBAL (VIVO)</h3>
-            <table id="rankTable">
-                <thead>
-                    <tr><th>Aluno</th><th>Série</th><th>Pts</th><th>Ações</th></tr>
-                </thead>
-                <tbody id="rankBody"></tbody>
-            </table>
+    <div class="container">
+        <div class="header">
+            <h1>🛡️ COC Admin <span style="font-weight: 200; font-size: 1rem; color: #718096;">v2.0</span></h1>
+            <div id="live-indicator">● LIVE</div>
         </div>
 
-        <div class="box">
-            <h3>🔨 CENTRAL DE SEGURANÇA</h3>
-            <p>Banir por Nome:</p>
-            <input type="text" id="banInput" placeholder="Ex: AlunoZuado123">
-            <button onclick="banirDireto()">BANIR</button>
-            <hr style="border-color: #333;">
-            
-            <h3>📊 DESEMPENHO POR SALA</h3>
-            <div id="statsContainer"></div>
-
-            <h3>📜 TERMINAL DE LOGS</h3>
-            <div id="logBox"></div>
+        <div class="grid">
+            <div class="card">
+                <h2>🏆 Classificação em Tempo Real</h2>
+                <table id="rankTable">
+                    <thead><tr><th>ALUNO</th><th>SÉRIE</th><th>PONTOS</th><th>AÇÃO</th></tr></thead>
+                    <tbody id="rankBody"></tbody>
+                </table>
+            </div>
+            <div class="card">
+                <h2>📜 Monitor de Atividade</h2>
+                <div id="logBox"></div>
+                <h2 style="margin-top:20px">🔨 Banimento Rápido</h2>
+                <input type="text" id="banIn" placeholder="Nome exato..." style="width:70%; background:#0b0f1a; border:1px solid #2d3748; color:white; padding:8px; border-radius:6px;">
+                <button onclick="banirDireto()" style="background:var(--red); border:none; color:white; padding:8px; border-radius:6px; cursor:pointer;">BAN</button>
+            </div>
         </div>
     </div>
 
     <script>
-        function atualizarPainel() {
-            fetch('/api/admin/data')
-                .then(r => r.json())
-                .then(data => {
-                    // Atualiza Tabela e Adiciona Botão de Ban em cada linha
-                    const tbody = document.getElementById('rankBody');
-                    tbody.innerHTML = data.ranking.map(u => `
-                        <tr>
-                            <td>${u.name}</td>
-                            <td>${u.grade}</td>
-                            <td>${u.score}</td>
-                            <td><button class="btn-red" onclick="banir('${u.name}')">X</button></td>
-                        </tr>
-                    `).join('');
-
-                    // Atualiza Logs
-                    document.getElementById('logBox').innerHTML = data.logs.slice(-20).reverse().join('<br>');
-
-                    // Atualiza Estatísticas por Série
-                    const stats = {};
-                    data.ranking.forEach(u => stats[u.grade] = (stats[u.grade] || 0) + 1);
-                    document.getElementById('statsContainer').innerHTML = Object.entries(stats)
-                        .map(([grade, count]) => `<div class="stat-card"><b>${grade}</b><br>${count} Alunos</div>`).join('');
-                });
-        }
-
-        function banir(nome) {
-            if(!confirm(`Deseja banir permanentemente ${nome}?`)) return;
-            fetch('/api/admin/ban', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ name: nome })
-            }).then(() => {
-                alert('MARTELO DO BAN APLICADO!');
-                atualizarPainel();
+        function update() {
+            fetch('/api/admin/data').then(r => r.json()).then(data => {
+                const tbody = document.getElementById('rankBody');
+                tbody.innerHTML = data.ranking.map(u => `
+                    <tr>
+                        <td><b>${u.name}</b></td>
+                        <td>${u.grade}</td>
+                        <td style="color:#10b981; font-weight:bold;">${u.score}</td>
+                        <td><button class="btn-ban" onclick="banir('${u.name}')">BANIR</button></td>
+                    </tr>
+                `).join('');
+                document.getElementById('logBox').innerHTML = data.logs.slice(-8).reverse().map(l => `<div class="log-item">${l}</div>`).join('');
             });
         }
 
-        function banirDireto() {
-            const nome = document.getElementById('banInput').value;
-            if(nome) banir(nome);
+        function banir(name) {
+            if(confirm('Banir ' + name + '?')) {
+                fetch('/api/admin/ban', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ name })
+                }).then(() => update());
+            }
         }
 
-        // Auto-refresh a cada 4 segundos
-        setInterval(atualizarPainel, 4000);
-        atualizarPainel();
+        function banirDireto() {
+            const n = document.getElementById('banIn').value;
+            if(n) banir(n);
+        }
+
+        setInterval(update, 3000);
+        update();
     </script>
 </body>
 </html>
