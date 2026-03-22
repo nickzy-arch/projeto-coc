@@ -3,114 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>COC ENGLISH | ULTIMATE</title>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
+    <title>English Quest - Plataforma de Aprendizagem</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        :root { --neon-dark: #003b00; --neon-bright: #00ff41; --bg: #050505; }
-        body { background: var(--bg); color: white; font-family: 'Fira Code', monospace; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
-        
-        /* EFEITO RESPIRAÇÃO VERDE */
-        @keyframes pulseGreen {
-            0% { border-color: var(--neon-dark); box-shadow: 0 0 5px var(--neon-dark); }
-            50% { border-color: var(--neon-bright); box-shadow: 0 0 20px var(--neon-bright); }
-            100% { border-color: var(--neon-dark); box-shadow: 0 0 5px var(--neon-dark); }
+        :root { --brand: #4f46e5; --bg: #f8fafc; --text: #1e293b; }
+        body { background: var(--bg); font-family: 'Inter', sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; color: var(--text); }
+        .container { 
+            background: white; border-radius: 20px; padding: 40px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            width: 100%; max-width: 400px; text-align: center;
+            border: 1px solid #e2e8f0; animation: breathe 6s infinite ease-in-out;
         }
-
-        .main-box { 
-            background: #0d0d0d; 
-            border: 2px solid var(--neon-bright); 
-            padding: 40px; 
-            border-radius: 8px; 
-            width: 90%; 
-            max-width: 400px; 
-            text-align: center;
-            animation: pulseGreen 4s infinite ease-in-out; /* A transição suave aqui */
+        @keyframes breathe { 0%, 100% { border-color: #e2e8f0; } 50% { border-color: #818cf8; } }
+        h1 { font-weight: 600; font-size: 1.8rem; color: var(--brand); margin-bottom: 5px; }
+        .info { font-size: 0.9rem; color: #64748b; margin-bottom: 30px; }
+        .credits { font-size: 0.75rem; color: #94a3b8; margin-top: 30px; padding-top: 20px; border-top: 1px solid #f1f5f9; }
+        .highlight { color: var(--brand); font-weight: 600; }
+        input, select { 
+            width: 100%; padding: 14px; margin-bottom: 12px; border-radius: 10px; 
+            border: 1px solid #e2e8f0; background: #fff; font-size: 14px;
+            font-family: inherit; box-sizing: border-box; outline: none;
         }
-
-        h2 { color: var(--neon-bright); text-transform: uppercase; letter-spacing: 2px; }
-        input, select { width: 100%; padding: 12px; margin: 10px 0; background: #000; border: 1px solid #111; color: var(--neon-bright); font-family: inherit; box-sizing: border-box; transition: 0.5s; }
-        input:focus { border-color: var(--neon-bright); outline: none; }
-        
         button { 
-            width: 100%; padding: 15px; background: var(--neon-bright); color: #000; 
-            border: none; font-weight: bold; cursor: pointer; transition: 0.3s; 
-            text-transform: uppercase; margin-top: 15px; 
+            width: 100%; padding: 15px; border-radius: 10px; border: none;
+            background: var(--brand); color: white; font-weight: 600; cursor: pointer; transition: 0.2s;
         }
-        button:hover { background: #fff; box-shadow: 0 0 30px var(--neon-bright); }
-
-        .option { border: 1px solid #222; margin: 10px 0; padding: 15px; cursor: pointer; transition: 0.3s; text-align: left; }
-        .option:hover { border-color: var(--neon-bright); background: rgba(0, 255, 65, 0.05); }
+        button:hover { opacity: 0.9; }
+        .option { 
+            background: white; border: 1px solid #e2e8f0; margin-bottom: 10px; 
+            padding: 16px; border-radius: 10px; cursor: pointer; text-align: left; transition: 0.2s;
+        }
+        .option:hover { border-color: var(--brand); background: #f5f3ff; }
+        .correct { border-color: #10b981 !important; background: #f0fdf4 !important; }
+        .wrong { border-color: #ef4444 !important; background: #fef2f2 !important; }
     </style>
 </head>
 <body>
-    <div id="game-container" class="main-box">
-        <h2 id="display-title">System Access</h2>
+    <div id="game-container" class="container">
         <div id="setup">
-            <input type="text" id="username" placeholder="IDENTIFICAÇÃO_DO_ALUNO">
+            <h1>English Quest</h1>
+            <p class="info">SALA: 9º ANO A</p>
+            <input type="text" id="username" placeholder="Nome completo do aluno">
             <select id="grade">
-                <option value="7">7º ANO</option><option value="8">8º ANO</option><option value="9">9º ANO</option>
-                <option value="1M">1º MÉDIO</option><option value="2M">2º MÉDIO</option><option value="3M">3º MÉDIO</option>
+                <option value="7">7º Ano Fundamental</option>
+                <option value="8">8º Ano Fundamental</option>
+                <option value="9">9º Ano Fundamental</option>
+                <option value="1M">1º Ano Ensino Médio</option>
+                <option value="2M">2º Ano Ensino Médio</option>
+                <option value="3M">3º Ano Ensino Médio</option>
             </select>
-            <button onclick="iniciar()">INITIALIZE</button>
+            <button onclick="iniciar()">Iniciar Atividade</button>
+            <div class="credits">
+                Desenvolvido por: <span class="highlight">Nicolas</span>, Rafael, Bruno e Gustavo
+            </div>
         </div>
         <div id="quiz" style="display:none">
-            <p id="question-text" style="font-size: 1.1rem; margin-bottom: 20px; color: #ccc;"></p>
+            <p id="question-text" style="font-size: 1.1rem; margin-bottom: 25px;"></p>
             <div id="options-box"></div>
         </div>
     </div>
-
     <script>
-        const sfx = {
-            correct: new Audio('https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3'),
-            wrong: new Audio('https://assets.mixkit.co/active_storage/sfx/2018/2018-preview.mp3')
-        };
-        let currentQuestions = [], index = 0, score = 0;
+        const sfx = { correct: new Audio('https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3'), wrong: new Audio('https://assets.mixkit.co/active_storage/sfx/2018/2018-preview.mp3') };
+        let questions = [], idx = 0, score = 0;
         let token = localStorage.getItem('userToken') || 'TK' + Math.random().toString(36).substr(2, 9);
         localStorage.setItem('userToken', token);
 
         async function iniciar() {
             const name = document.getElementById('username').value.trim();
-            if(!name) return alert("DIGITE O NOME");
-            
-            const auth = await fetch('/api/check-auth', { 
-                method: 'POST', 
-                headers: {'Content-Type': 'application/json'}, 
-                body: JSON.stringify({ name, token }) 
-            }).then(r => r.json());
-
-            if(auth.status === 'banned') return alert("ACCESS DENIED: BANISHED");
-            if(auth.status === 'taken') return alert("ERROR: NAME IN USE");
-
-            const g = document.getElementById('grade').value;
-            currentQuestions = await fetch('/api/questions/' + g).then(r => r.json());
+            if(!name) return;
+            const auth = await fetch('/api/check-auth', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ name, token }) }).then(r => r.json());
+            if(auth.status === 'banned') return alert("Acesso restrito.");
+            if(auth.status === 'taken') return alert("Nome já em uso em outro dispositivo.");
+            questions = await fetch('/api/questions/' + document.getElementById('grade').value).then(r => r.json());
             document.getElementById('setup').style.display = 'none';
             document.getElementById('quiz').style.display = 'block';
             showQ();
         }
 
         function showQ() {
-            if(index >= currentQuestions.length) return end();
-            const q = currentQuestions[index];
-            document.getElementById('question-text').innerText = `> ${q.q}`;
+            if(idx >= questions.length) return end();
+            const q = questions[idx];
+            document.getElementById('question-text').innerText = q.q;
             const box = document.getElementById('options-box'); box.innerHTML = '';
             q.o.forEach(opt => {
                 const d = document.createElement('div'); d.className = 'option'; d.innerText = opt;
                 d.onclick = () => {
-                    if(opt === q.a) { sfx.correct.play(); score += 10; }
-                    else { sfx.wrong.play(); }
-                    index++; setTimeout(showQ, 400);
+                    if(opt === q.a) { sfx.correct.play(); score += 10; d.className = 'option correct'; }
+                    else { sfx.wrong.play(); d.className = 'option wrong'; }
+                    idx++; setTimeout(showQ, 600);
                 };
                 box.appendChild(d);
             });
         }
 
         async function end() {
-            await fetch('/api/submit', { 
-                method: 'POST', 
-                headers: {'Content-Type': 'application/json'}, 
-                body: JSON.stringify({ name: document.getElementById('username').value, grade: document.getElementById('grade').value, score, token }) 
-            });
-            document.getElementById('quiz').innerHTML = `<h1 style="color:#00ff41">${score} PTS</h1><button onclick="location.reload()">REBOOT</button>`;
+            await fetch('/api/submit', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ name: document.getElementById('username').value, grade: document.getElementById('grade').value, score, token }) });
+            document.getElementById('quiz').innerHTML = `<h2>Concluído</h2><p>Pontuação: <strong>${score} pontos</strong></p><button onclick="location.reload()">Reiniciar</button>`;
         }
     </script>
 </body>
