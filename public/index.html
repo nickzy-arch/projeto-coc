@@ -1,129 +1,121 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal de Avaliação COC</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>COC English | Challenge</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
-        body { font-family: 'Inter', sans-serif; background: #fdfdfd; color: #1a1a1a; }
-        .text-coc { color: #10b981; }
-        .bg-coc { background-color: #10b981; }
-        .hidden { display: none; }
+        :root { --p: #6366f1; --bg: #0f172a; --card: #1e293b; --text: #f8fafc; }
+        body { background: var(--bg); color: var(--text); font-family: 'Plus Jakarta Sans', sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; overflow: hidden; }
+        .glass { background: var(--card); padding: 40px; border-radius: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); width: 90%; max-width: 450px; text-align: center; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); animation: fade 0.6s ease; }
+        @keyframes fade { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+        input, select { width: 100%; padding: 14px; margin: 10px 0; border-radius: 12px; border: 1px solid #334155; background: #0f172a; color: white; box-sizing: border-box; font-size: 1rem; }
+        button { width: 100%; padding: 16px; border-radius: 12px; border: none; background: var(--p); color: white; font-weight: 800; cursor: pointer; transition: 0.3s; margin-top: 10px; }
+        button:hover { filter: brightness(1.2); transform: translateY(-2px); box-shadow: 0 10px 20px rgba(99, 102, 241, 0.4); }
+        .option { background: rgba(255,255,255,0.05); margin: 8px 0; border: 1px solid #334155; text-align: left; padding: 15px; border-radius: 12px; cursor: pointer; transition: 0.2s; }
+        .option:hover { background: rgba(99, 102, 241, 0.1); border-color: var(--p); }
+        .shake { animation: shake 0.4s; }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
     </style>
 </head>
-<body class="min-h-screen">
-    <nav class="border-b py-4 px-8 flex justify-between items-center bg-white sticky top-0 z-50">
-        <div class="flex items-center gap-3">
-            <img src="logo.png" alt="COC" class="h-10 w-auto">
-            <div class="flex flex-col">
-                <span class="font-bold text-lg leading-none tracking-tight">Portal <span class="text-coc">COC</span></span>
-                <span class="text-[10px] text-gray-400 font-bold uppercase mt-1">Língua Inglesa</span>
-            </div>
-        </div>
-        <div class="text-[10px] text-gray-400 font-bold text-right">9º ANO A | NICOLAS, RAFAEL, BRUNO, GUSTAVO</div>
-    </nav>
+<body>
 
-    <main id="screen-login" class="max-w-6xl mx-auto mt-12 px-6 grid md:grid-cols-2 gap-12">
-        <div>
-            <h1 class="text-3xl font-extrabold mb-4">Acesso Discente</h1>
-            <p class="text-gray-500 mb-8 text-sm">Identifique-se para iniciar a bateria de questões.</p>
-            <form id="login-form" class="space-y-4">
-                <input type="text" id="p-name" placeholder="Nome Completo" class="w-full border p-4 rounded-lg outline-none focus:border-emerald-500" required>
-                <select id="p-grade" class="w-full border p-4 rounded-lg outline-none bg-white">
-                    <option value="7">7º Ano - Fundamental</option>
-                    <option value="8">8º Ano - Fundamental</option>
-                    <option value="9">9º Ano - Fundamental</option>
-                    <option value="1M">1º Ano - Médio</option>
-                    <option value="2M">2º Ano - Médio</option>
-                    <option value="3M">3º Ano - Médio</option>
-                </select>
-                <div class="p-4 bg-gray-50 rounded-lg flex gap-3 items-start border">
-                    <input type="checkbox" id="terms" class="mt-1 w-4 h-4 cursor-pointer">
-                    <label for="terms" class="text-xs text-gray-500 leading-relaxed">Concordo que meus dados e pontuação serão registrados no banco de dados da instituição para fins de avaliação.</label>
-                </div>
-                <button type="submit" id="start-btn" class="w-full bg-coc text-white p-4 rounded-lg font-bold disabled:opacity-50" disabled>Iniciar Sessão</button>
-            </form>
+    <div id="game-container" class="glass">
+        <h2 id="title">Welcome, Student!</h2>
+        <div id="setup">
+            <input type="text" id="username" placeholder="Seu nome completo">
+            <select id="grade">
+                <option value="7">7º Ano</option>
+                <option value="8">8º Ano</option>
+                <option value="9">9º Ano</option>
+                <option value="1M">1º Médio</option>
+                <option value="2M">2º Médio</option>
+                <option value="3M">3º Médio</option>
+            </select>
+            <button onclick="iniciar()">START QUIZ</button>
         </div>
-        <div class="border rounded-2xl p-8 bg-white shadow-sm">
-            <h2 class="text-xl font-bold mb-6 border-b pb-4">Classificação Atual</h2>
-            <div id="rank-list" class="space-y-2"></div>
+        <div id="quiz" style="display:none">
+            <h3 id="question-text"></h3>
+            <div id="options-box"></div>
         </div>
-    </main>
-
-    <section id="screen-game" class="hidden max-w-2xl mx-auto mt-20 px-6">
-        <div class="flex justify-between items-center mb-8 border-b pb-4">
-            <span id="q-count" class="text-xs font-bold text-gray-400 uppercase">Questão 01/15</span>
-            <span id="timer" class="font-mono font-bold text-red-600 bg-red-50 px-3 py-1 rounded">05:00</span>
-        </div>
-        <h2 id="q-text" class="text-2xl font-bold mb-10 leading-tight">...</h2>
-        <div id="options" class="grid gap-3"></div>
-    </section>
-
-    <section id="screen-end" class="hidden max-w-sm mx-auto mt-32 text-center border p-12 rounded-3xl shadow-2xl bg-white">
-        <h2 class="text-2xl font-bold mb-2">Sessão Encerrada</h2>
-        <p class="text-gray-400 mb-8 text-sm font-medium">Pontuação processada com sucesso.</p>
-        <div class="text-6xl font-black text-coc mb-10" id="f-score">0</div>
-        <button onclick="location.reload()" class="w-full bg-slate-900 text-white py-4 rounded-xl font-bold">Voltar ao Início</button>
-    </section>
+    </div>
 
     <script>
-        let pName, pGrade, questions = [], qIdx = 0, score = 0, timeLeft = 300;
-        document.getElementById('terms').onchange = (e) => document.getElementById('start-btn').disabled = !e.target.checked;
-        
-        document.getElementById('login-form').onsubmit = async (e) => {
-            e.preventDefault();
-            pName = document.getElementById('p-name').value;
-            pGrade = document.getElementById('p-grade').value;
-            const res = await fetch('/api/questions/' + pGrade);
-            questions = await res.json();
-            document.getElementById('screen-login').classList.add('hidden');
-            document.getElementById('screen-game').classList.remove('hidden');
-            const t = setInterval(() => {
-                timeLeft--;
-                let m = Math.floor(timeLeft/60), s = timeLeft%60;
-                document.getElementById('timer').innerText = `${m}:${s<10?'0':''}${s}`;
-                if(timeLeft <= 0) { clearInterval(t); sendScore(); }
-            }, 1000);
-            showQ();
+        const sfx = {
+            click: new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3'),
+            correct: new Audio('https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3'),
+            wrong: new Audio('https://assets.mixkit.co/active_storage/sfx/2018/2018-preview.mp3')
         };
 
-        function showQ() {
-            if(qIdx >= questions.length) return sendScore();
-            const q = questions[qIdx];
-            document.getElementById('q-text').innerText = q.q;
-            document.getElementById('q-count').innerText = `Questão ${qIdx+1}/15`;
-            const optDiv = document.getElementById('options');
-            optDiv.innerHTML = '';
-            q.o.forEach((opt, i) => {
-                const b = document.createElement('button');
-                b.className = "w-full text-left p-4 border rounded-xl hover:border-emerald-500 hover:bg-emerald-50 font-medium transition-all";
-                b.innerText = opt;
-                b.onclick = () => { if(i === q.c) score += 1000; qIdx++; showQ(); };
-                optDiv.appendChild(b);
+        let currentQuestions = [];
+        let index = 0;
+        let score = 0;
+        let token = localStorage.getItem('userToken') || 'TK' + Math.random().toString(36).substr(2, 9);
+        localStorage.setItem('userToken', token);
+
+        async function iniciar() {
+            const name = document.getElementById('username').value.trim();
+            const grade = document.getElementById('grade').value;
+            if(!name) return alert("Digite seu nome!");
+
+            const auth = await fetch('/api/check-auth', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ name, token })
+            }).then(r => r.json());
+
+            if(auth.status === 'banned') return alert("❌ Você foi banido pelo professor!");
+            if(auth.status === 'taken') return alert("⚠️ Esse nome já está em uso por outro aluno!");
+
+            sfx.click.play();
+            currentQuestions = await fetch('/api/questions/' + grade).then(r => r.json());
+            document.getElementById('setup').style.display = 'none';
+            document.getElementById('quiz').style.display = 'block';
+            proximaQuestao();
+        }
+
+        function proximaQuestao() {
+            if(index >= currentQuestions.length) return finalizar();
+            const q = currentQuestions[index];
+            document.getElementById('question-text').innerText = q.q;
+            const box = document.getElementById('options-box');
+            box.innerHTML = '';
+            q.o.forEach(opt => {
+                const btn = document.createElement('div');
+                btn.className = 'option';
+                btn.innerText = opt;
+                btn.onclick = () => checar(opt, q.a, btn);
+                box.appendChild(btn);
             });
         }
 
-        async function sendScore() {
-            await fetch('/api/submit', { method: 'POST', headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ name: pName, grade: pGrade, score: score })
-            });
-            document.getElementById('screen-game').classList.add('hidden');
-            document.getElementById('screen-end').classList.remove('hidden');
-            document.getElementById('f-score').innerText = score;
+        function checar(escolha, correta, elemento) {
+            if(escolha === correta) {
+                sfx.correct.play();
+                score += 10;
+                elemento.style.borderColor = "#10b981";
+                elemento.style.background = "rgba(16, 185, 129, 0.1)";
+            } else {
+                sfx.wrong.play();
+                document.getElementById('game-container').classList.add('shake');
+                setTimeout(() => document.getElementById('game-container').classList.remove('shake'), 400);
+                elemento.style.borderColor = "#ef4444";
+            }
+            index++;
+            setTimeout(proximaQuestao, 600);
         }
 
-        async function loadRank() {
-            const res = await fetch('/api/ranking');
-            const data = await res.json();
-            document.getElementById('rank-list').innerHTML = data.map((p, i) => `
-                <div class="flex justify-between items-center p-3 border-b text-sm">
-                    <span><b class="text-gray-300 mr-2">${i+1}.</b> ${p.name}</span>
-                    <b class="text-coc">${p.score}</b>
-                </div>`).join('');
+        async function finalizar() {
+            const name = document.getElementById('username').value;
+            const grade = document.getElementById('grade').value;
+            await fetch('/api/submit', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ name, grade, score, token })
+            });
+            document.getElementById('quiz').innerHTML = `<h2>Fim de Jogo!</h2><p style="font-size: 2rem; font-weight:800; color:var(--p)">${score} pts</p><button onclick="location.reload()">VOLTAR</button>`;
         }
-        loadRank();
     </script>
 </body>
 </html>
