@@ -3,90 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>English Quest - Plataforma Educacional</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <title>English Quest</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
-        :root { 
-            --brand: #00ff41; /* Verde RGB Neon */
-            --brand-dark: #00cc33;
-            --bg: #f8fafc; 
-            --gold: #fbbf24; 
-            --silver: #94a3b8; 
-            --bronze: #d97706;
-        }
-        body { 
-            background: var(--bg); 
-            font-family: 'Inter', sans-serif; 
-            margin: 0; display: flex; height: 100vh; overflow: hidden;
-        }
+        :root { --brand: #00ff41; --brand-dark: #00cc33; --bg: #f8fafc; --gold: #fbbf24; --silver: #94a3b8; --bronze: #d97706; }
+        body { background: var(--bg); font-family: 'Inter', sans-serif; margin: 0; display: flex; height: 100vh; overflow: hidden; color: #1e293b; }
 
-        /* LADO DO JOGO */
-        .game-section { flex: 1; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        /* LAYOUT RESPONSIVO */
+        .game-section { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; overflow-y: auto; }
+        
+        /* RANKING LATERAL (SÓ PC) */
+        .sidebar-ranking { width: 320px; background: white; border-left: 1px solid #e2e8f0; display: flex; flex-direction: column; }
+        @media (max-width: 850px) { .sidebar-ranking { display: none; } } /* SOME NO CELULAR */
+
         .container { 
-            background: white; border-radius: 20px; padding: 40px; 
+            background: white; border-radius: 20px; padding: 30px; 
             box-shadow: 0 10px 25px rgba(0,0,0,0.05);
             width: 100%; max-width: 400px; text-align: center;
             border: 1px solid #e2e8f0; animation: breathe 6s infinite ease-in-out;
         }
-        /* Efeito de respiração suave em verde */
         @keyframes breathe { 0%, 100% { border-color: #e2e8f0; } 50% { border-color: var(--brand); } }
 
-        /* RANKING LATERAL */
-        .sidebar-ranking { 
-            width: 320px; background: white; border-left: 1px solid #e2e8f0; 
-            display: flex; flex-direction: column;
-        }
-        .sidebar-header { padding: 25px; border-bottom: 1px solid #f1f5f9; text-align: center; }
-        .sidebar-header h2 { margin: 0; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 2px; color: #94a3b8; }
+        /* RANKING DENTRO DO SETUP E END */
+        .inline-rank { margin-top: 20px; text-align: left; max-height: 200px; overflow-y: auto; border-top: 1px solid #f1f5f9; padding-top: 15px; }
+        .rank-card { display: flex; align-items: center; padding: 10px; border-radius: 8px; margin-bottom: 5px; font-size: 0.85rem; border: 1px solid #f8fafc; }
+        .top-1 { background: #fffbeb; border-color: var(--gold); }
+        .rank-pos { width: 25px; font-weight: 800; color: #94a3b8; }
 
-        #ranking-list { flex: 1; overflow-y: auto; padding: 15px; }
-
-        .rank-card { 
-            display: flex; align-items: center; padding: 15px; 
-            border-radius: 12px; margin-bottom: 10px; border: 1px solid #f1f5f9;
-            transition: all 0.4s ease; animation: slideIn 0.5s ease-out;
-        }
-        @keyframes slideIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
-
-        .rank-pos { 
-            width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;
-            border-radius: 50%; font-weight: 800; font-size: 0.8rem; margin-right: 15px;
-            background: #f1f5f9; color: #94a3b8;
-        }
-
-        /* TOP 1, 2, 3 COM CORES DE PÓDIO */
-        .top-1 { border-left: 5px solid var(--gold); background: #fffbeb; }
-        .top-1 .rank-pos { background: var(--gold); color: white; scale: 1.1; }
-        .top-2 { border-left: 5px solid var(--silver); background: #f8fafc; }
-        .top-2 .rank-pos { background: var(--silver); color: white; }
-        .top-3 { border-left: 5px solid var(--bronze); background: #fff7ed; }
-        .top-3 .rank-pos { background: var(--bronze); color: white; }
-
-        .rank-info { flex: 1; }
-        .rank-name { display: block; font-size: 0.9rem; font-weight: 600; color: #1e293b; }
-        .rank-score { font-weight: 800; color: var(--brand-dark); font-size: 0.95rem; }
-
-        /* ELEMENTOS DO QUIZ EM VERDE */
-        h1 { font-weight: 700; font-size: 1.8rem; color: var(--brand-dark); margin: 0; }
-        .info { font-size: 0.8rem; color: #94a3b8; margin-bottom: 25px; }
+        h1 { font-weight: 800; font-size: 1.8rem; color: var(--brand-dark); margin: 0; }
+        .info { font-size: 0.8rem; color: #94a3b8; margin-bottom: 20px; }
         
-        input, select { width: 100%; padding: 14px; margin-bottom: 10px; border-radius: 10px; border: 1px solid #e2e8f0; font-family: inherit; box-sizing: border-box; outline: none; transition: 0.2s; }
-        input:focus, select:focus { border-color: var(--brand); }
+        input, select { width: 100%; padding: 14px; margin-bottom: 10px; border-radius: 10px; border: 1px solid #e2e8f0; font-family: inherit; box-sizing: border-box; outline: none; }
+        
+        .btn-main { width: 100%; padding: 15px; border-radius: 10px; border: none; background: var(--brand-dark); color: white; font-weight: 600; cursor: pointer; transition: 0.2s; margin-bottom: 10px; }
+        .btn-exit { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #e2e8f0; background: white; color: #64748b; font-weight: 600; cursor: pointer; }
 
-        button { 
-            width: 100%; padding: 15px; border-radius: 10px; border: none; 
-            background: var(--brand-dark); color: white; font-weight: 600; 
-            cursor: pointer; transition: 0.2s; box-shadow: 0 4px 10px rgba(0, 204, 51, 0.2);
-        }
-        button:hover { background: var(--brand); transform: translateY(-1px); box-shadow: 0 6px 15px rgba(0, 255, 65, 0.3); }
-
-        .option { background: white; border: 1px solid #e2e8f0; margin-bottom: 10px; padding: 15px; border-radius: 10px; cursor: pointer; text-align: left; transition: 0.2s; }
+        .option { background: white; border: 1px solid #e2e8f0; margin-bottom: 10px; padding: 15px; border-radius: 10px; cursor: pointer; text-align: left; transition: 0.2s; font-size: 0.95rem; }
         .option:hover { border-color: var(--brand); background: #f0fff4; }
         
-        .correct { border-color: #10b981 !important; background: #f0fdf4 !important; color: #166534; font-weight: 600; }
-        .wrong { border-color: #ef4444 !important; background: #fef2f2 !important; color: #991b1b; }
+        .correct { border-color: #10b981 !important; background: #f0fdf4 !important; }
+        .wrong { border-color: #ef4444 !important; background: #fef2f2 !important; }
         
-        .credits { font-size: 0.7rem; color: #cbd5e1; margin-top: 25px; border-top: 1px solid #f1f5f9; padding-top: 15px; }
+        .credits { font-size: 0.7rem; color: #cbd5e1; margin-top: 20px; line-height: 1.4; }
+        .sidebar-header { padding: 20px; border-bottom: 1px solid #f1f5f9; text-align: center; font-size: 0.7rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; }
     </style>
 </head>
 <body>
@@ -95,29 +54,44 @@
         <div id="game-container" class="container">
             <div id="setup">
                 <h1>English Quest</h1>
-                <p class="info">UNIDADE ACADÊMICA: 9º ANO A</p>
-                <input type="text" id="username" placeholder="Nome completo do aluno">
+                <p class="info">9º ANO A • ATIVIDADE</p>
+                <input type="text" id="username" placeholder="Seu nome completo">
                 <select id="grade">
+                    <option value="9">9º Ano Fundamental</option>
                     <option value="7">7º Ano Fundamental</option>
                     <option value="8">8º Ano Fundamental</option>
-                    <option value="9">9º Ano Fundamental</option>
                     <option value="1M">1º Ensino Médio</option>
                     <option value="2M">2º Ensino Médio</option>
                     <option value="3M">3º Ensino Médio</option>
                 </select>
-                <button onclick="iniciar()">Iniciar Sessão</button>
-                <div class="credits">Fundadores: <span style="color:var(--brand-dark)">Nicolas</span>, Rafael, Bruno e Gustavo</div>
+                <button class="btn-main" onclick="iniciar()">Entrar no Jogo</button>
+                
+                <div class="credits">
+                    Desenvolvedor: <b style="color:#475569">Nicolas</b><br>
+                    Colaboradores: Rafael, Bruno e Gustavo
+                </div>
+
+                <div class="inline-rank" id="start-rank"></div>
             </div>
+
             <div id="quiz" style="display:none">
-                <p id="question-text" style="font-weight: 600; font-size: 1.1rem; color: #1e293b;"></p>
+                <p id="question-text" style="font-weight: 600; font-size: 1.1rem; margin-bottom: 20px;"></p>
                 <div id="options-box"></div>
+            </div>
+
+            <div id="result" style="display:none">
+                <h2>Fim de Jogo</h2>
+                <p>Você fez <strong id="final-score" style="color:var(--brand-dark)">0</strong> pontos.</p>
+                <button class="btn-main" onclick="location.reload()">Reiniciar</button>
+                <button class="btn-exit" onclick="sair()">Sair</button>
+                <div class="inline-rank" id="end-rank"></div>
             </div>
         </div>
     </div>
 
     <div class="sidebar-ranking">
-        <div class="sidebar-header"><h2>Classificação Atual</h2></div>
-        <div id="ranking-list"></div>
+        <div class="sidebar-header">Classificação Geral</div>
+        <div id="side-rank-list" style="padding: 15px; overflow-y: auto;"></div>
     </div>
 
     <script>
@@ -125,37 +99,29 @@
         let questions = [], idx = 0, score = 0, currentToken = localStorage.getItem('userToken') || 'TK'+Math.random().toString(36).substr(2,9);
         localStorage.setItem('userToken', currentToken);
 
-        async function updateRanking() {
+        async function updateRankings() {
             try {
                 const res = await fetch('/api/admin/data');
                 const data = await res.json();
-                const list = document.getElementById('ranking-list');
-                
-                const html = data.ranking.slice(0, 10).map((u, i) => {
-                    let topClass = "";
-                    if(i === 0) topClass = "top-1";
-                    else if(i === 1) topClass = "top-2";
-                    else if(i === 2) topClass = "top-3";
-
-                    return `
-                        <div class="rank-card ${topClass}">
-                            <div class="rank-pos">${i+1}</div>
-                            <div class="rank-info"><span class="rank-name">${u.name}</span></div>
-                            <div class="rank-score">${u.score} pts</div>
-                        </div>
-                    `;
-                }).join('');
-
-                if(list.innerHTML !== html) list.innerHTML = html;
+                const render = (u, i) => `
+                    <div class="rank-card ${i===0?'top-1':''}">
+                        <div class="rank-pos">${i+1}</div>
+                        <div style="flex:1"><b>${u.name}</b></div>
+                        <div style="color:var(--brand-dark); font-weight:700">${u.score}</div>
+                    </div>`;
+                const html = data.ranking.slice(0, 10).map(render).join('');
+                document.getElementById('side-rank-list').innerHTML = html;
+                if(document.getElementById('start-rank')) document.getElementById('start-rank').innerHTML = '<b>Top Alunos:</b>' + html;
+                if(document.getElementById('end-rank')) document.getElementById('end-rank').innerHTML = '<b>Classificação Final:</b>' + html;
             } catch(e) {}
         }
 
         async function iniciar() {
             const name = document.getElementById('username').value.trim();
-            if(!name) return;
+            if(!name) return alert("Digite seu nome!");
             const auth = await fetch('/api/check-auth', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ name, token: currentToken }) }).then(r => r.json());
             if(auth.status === 'banned') return alert("Acesso restrito.");
-            if(auth.status === 'taken') return alert("Usuário já autenticado.");
+            if(auth.status === 'taken') return alert("Nome já em uso.");
 
             questions = await fetch('/api/questions/' + document.getElementById('grade').value).then(r => r.json());
             document.getElementById('setup').style.display = 'none';
@@ -181,12 +147,19 @@
 
         async function end() {
             await fetch('/api/submit', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ name: document.getElementById('username').value, grade: document.getElementById('grade').value, score, token: currentToken }) });
-            document.getElementById('quiz').innerHTML = `<h2>Atividade Concluída</h2><p>Resultado final: <strong>${score} pontos</strong></p><button onclick="location.reload()">Reiniciar Teste</button>`;
-            updateRanking();
+            document.getElementById('quiz').style.display = 'none';
+            document.getElementById('result').style.display = 'block';
+            document.getElementById('final-score').innerText = score;
+            updateRankings();
         }
 
-        setInterval(updateRanking, 4000);
-        updateRanking();
+        function sair() {
+            localStorage.removeItem('userToken');
+            location.reload();
+        }
+
+        setInterval(updateRankings, 5000);
+        updateRankings();
     </script>
 </body>
 </html>
