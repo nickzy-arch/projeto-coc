@@ -1,74 +1,111 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Console Admin | COC</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CENTRAL DE COMANDO - COC ENGLISH</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --neon: #00ff41; --bg: #0a0a0a; --red: #ff3e3e; }
+        body { background: var(--bg); color: var(--neon); font-family: 'JetBrains Mono', monospace; margin: 0; padding: 20px; }
+        h1 { text-align: center; border-bottom: 2px solid var(--neon); padding-bottom: 10px; text-transform: uppercase; letter-spacing: 3px; }
+        
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .box { border: 1px solid var(--neon); padding: 15px; background: rgba(0, 255, 65, 0.05); box-shadow: 0 0 10px rgba(0, 255, 65, 0.2); }
+        h3 { margin-top: 0; border-left: 4px solid var(--neon); padding-left: 10px; }
+
+        input { background: #000; border: 1px solid var(--neon); color: var(--neon); padding: 8px; width: 60%; font-family: inherit; }
+        button { background: var(--neon); color: #000; border: none; padding: 8px 15px; cursor: pointer; font-weight: bold; text-transform: uppercase; }
+        button:hover { background: #fff; box-shadow: 0 0 15px var(--neon); }
+        .btn-red { background: var(--red); color: #fff; }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th { background: var(--neon); color: #000; padding: 10px; text-align: left; }
+        td { border-bottom: 1px solid #333; padding: 8px; }
+
+        #logBox { height: 150px; overflow-y: auto; font-size: 12px; background: #000; padding: 10px; border: 1px inset #333; }
+        .stat-card { display: inline-block; padding: 10px; border: 1px solid var(--neon); margin-right: 10px; min-width: 80px; text-align: center; }
+        
+        @media (max-width: 768px) { .grid { grid-template-columns: 1fr; } }
+    </style>
 </head>
-<body class="bg-gray-50 p-6 font-sans">
-    <div id="login-box" class="max-w-md mx-auto mt-20 bg-white p-10 rounded-2xl shadow-xl border">
-        <h2 class="text-xl font-black text-center mb-8 uppercase tracking-widest">Admin Access</h2>
-        <input type="text" id="u" placeholder="User" class="w-full border p-4 mb-4 rounded-xl outline-none">
-        <input type="password" id="p" placeholder="Password" class="w-full border p-4 mb-8 rounded-xl outline-none">
-        <button onclick="auth()" class="w-full bg-slate-900 text-white p-4 rounded-xl font-bold">ENTRAR</button>
-    </div>
+<body>
 
-    <div id="panel" class="hidden max-w-6xl mx-auto">
-        <header class="flex justify-between items-center mb-10 border-b pb-6">
-            <h1 class="text-2xl font-black text-slate-900 uppercase">Gestão Acadêmica <span class="text-emerald-500">COC</span></h1>
-            <div class="flex gap-4">
-                <button onclick="exportTxt()" class="bg-white border px-4 py-2 rounded-lg text-xs font-bold uppercase hover:bg-gray-50">Exportar .TXT</button>
-                <button onclick="location.reload()" class="text-red-500 font-bold text-xs uppercase underline">Sair</button>
-            </div>
-        </header>
+    <h1>🛰️ COC SYSTEM MODERATION</h1>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10 text-center">
-            <div class="bg-white p-6 rounded-xl shadow-sm border"><p class="text-[10px] text-gray-400 font-black uppercase">Avaliações</p><h2 id="st-total" class="text-3xl font-black">0</h2></div>
-            <div class="bg-white p-6 rounded-xl shadow-sm border"><p class="text-[10px] text-gray-400 font-black uppercase">Acesso Único</p><h2 class="text-3xl font-black text-emerald-500 italic">Ativo</h2></div>
-            <div class="bg-white p-6 rounded-xl shadow-sm border"><p class="text-[10px] text-gray-400 font-black uppercase">Relatório</p><button onclick="clearRank()" class="text-xs text-red-500 font-bold">LIMPAR TUDO</button></div>
+    <div class="grid">
+        <div class="box">
+            <h3>🏆 RANKING GLOBAL (VIVO)</h3>
+            <table id="rankTable">
+                <thead>
+                    <tr><th>Aluno</th><th>Série</th><th>Pts</th><th>Ações</th></tr>
+                </thead>
+                <tbody id="rankBody"></tbody>
+            </table>
         </div>
 
-        <div class="grid lg:grid-cols-2 gap-8">
-            <div class="bg-white rounded-xl shadow-sm border h-[500px] overflow-y-auto">
-                <table class="w-full text-left text-xs">
-                    <thead class="bg-gray-100 text-gray-500 sticky top-0 uppercase"><tr><th class="p-4">Aluno</th><th class="p-4">Série</th><th class="p-4 text-right">Score</th></tr></thead>
-                    <tbody id="table-body"></tbody>
-                </table>
-            </div>
-            <div class="bg-slate-900 rounded-xl p-6 shadow-2xl h-[500px] overflow-y-auto text-emerald-400 font-mono text-[10px] space-y-1">
-                <div class="text-white border-b border-slate-700 mb-2 pb-1 underline">LIVE LOGS:</div>
-                <div id="log-content"></div>
-            </div>
+        <div class="box">
+            <h3>🔨 CENTRAL DE SEGURANÇA</h3>
+            <p>Banir por Nome:</p>
+            <input type="text" id="banInput" placeholder="Ex: AlunoZuado123">
+            <button onclick="banirDireto()">BANIR</button>
+            <hr style="border-color: #333;">
+            
+            <h3>📊 DESEMPENHO POR SALA</h3>
+            <div id="statsContainer"></div>
+
+            <h3>📜 TERMINAL DE LOGS</h3>
+            <div id="logBox"></div>
         </div>
     </div>
 
     <script>
-        let rawData = [];
-        function auth() {
-            if(document.getElementById('u').value === "AdminCOC26" && document.getElementById('p').value === "nigubura") {
-                document.getElementById('login-box').style.display = 'none';
-                document.getElementById('panel').classList.remove('hidden');
-                refresh(); setInterval(refresh, 3000);
-            } else { alert("Acesso Negado."); }
+        function atualizarPainel() {
+            fetch('/api/admin/data')
+                .then(r => r.json())
+                .then(data => {
+                    // Atualiza Tabela e Adiciona Botão de Ban em cada linha
+                    const tbody = document.getElementById('rankBody');
+                    tbody.innerHTML = data.ranking.map(u => `
+                        <tr>
+                            <td>${u.name}</td>
+                            <td>${u.grade}</td>
+                            <td>${u.score}</td>
+                            <td><button class="btn-red" onclick="banir('${u.name}')">X</button></td>
+                        </tr>
+                    `).join('');
+
+                    // Atualiza Logs
+                    document.getElementById('logBox').innerHTML = data.logs.slice(-20).reverse().join('<br>');
+
+                    // Atualiza Estatísticas por Série
+                    const stats = {};
+                    data.ranking.forEach(u => stats[u.grade] = (stats[u.grade] || 0) + 1);
+                    document.getElementById('statsContainer').innerHTML = Object.entries(stats)
+                        .map(([grade, count]) => `<div class="stat-card"><b>${grade}</b><br>${count} Alunos</div>`).join('');
+                });
         }
-        async function refresh() {
-            const res = await fetch('/api/admin/status');
-            const data = await res.json();
-            rawData = data.r;
-            document.getElementById('st-total').innerText = data.r.length;
-            document.getElementById('table-body').innerHTML = data.r.map(p => `<tr class="border-b"><td class="p-4 font-bold text-slate-700">${p.name}</td><td class="p-4 text-gray-400">${p.grade}</td><td class="p-4 text-right font-black text-emerald-600">${p.score}</td></tr>`).join('');
-            document.getElementById('log-content').innerHTML = data.l.slice().reverse().map(line => `<div>> ${line}</div>`).join('');
+
+        function banir(nome) {
+            if(!confirm(`Deseja banir permanentemente ${nome}?`)) return;
+            fetch('/api/admin/ban', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ name: nome })
+            }).then(() => {
+                alert('MARTELO DO BAN APLICADO!');
+                atualizarPainel();
+            });
         }
-        function exportTxt() {
-            let t = "RELATORIO COC\n\n";
-            rawData.forEach(p => t += `ALUNO: ${p.name} | SERIE: ${p.grade} | SCORE: ${p.score} | DATA: ${p.date}\n`);
-            const blob = new Blob([t], {type: "text/plain"});
-            const a = document.createElement("a");
-            a.href = URL.createObjectURL(blob);
-            a.download = "relatorio_coc.txt";
-            a.click();
+
+        function banirDireto() {
+            const nome = document.getElementById('banInput').value;
+            if(nome) banir(nome);
         }
-        async function clearRank() { if(confirm("LIMPAR TUDO?")) { await fetch('/api/admin/clear', {method: 'POST'}); refresh(); } }
+
+        // Auto-refresh a cada 4 segundos
+        setInterval(atualizarPainel, 4000);
+        atualizarPainel();
     </script>
 </body>
 </html>
