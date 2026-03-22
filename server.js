@@ -9,12 +9,11 @@ let ranking = [];
 let bannedUsers = [];
 let logs = [`[SISTEMA] Iniciado em ${new Date().toLocaleString()}`];
 
-// BANCO DE 90 QUESTÕES (15 POR TURMA)
 const bancoQuestoes = {
     "7": [
         { q: "Past of 'Go'?", a: "Went", o: ["Goes", "Went", "Gone", "Going"] },
         { q: "Opposite of 'Big'?", a: "Small", o: ["Large", "Small", "Tall", "Long"] },
-        { q: "How do you say 'Livro'?", a: "Book", o: ["Pen", "Book", "Table", "Chair"] },
+        { q: "Traduzir: 'Book'", a: "Livro", o: ["Caneta", "Livro", "Mesa", "Cadeira"] },
         { q: "I ___ a student.", a: "am", o: ["is", "are", "am", "be"] },
         { q: "She ___ pizza.", a: "likes", o: ["like", "likes", "liking", "liked"] },
         { q: "Color of the sky?", a: "Blue", o: ["Red", "Green", "Blue", "Yellow"] },
@@ -63,7 +62,7 @@ const bancoQuestoes = {
         { q: "Meaning of 'Library'?", a: "Biblioteca", o: ["Livraria", "Biblioteca", "Escola", "Loja"] }
     ],
     "1M": [
-        { q: "Condition 2: If I won, I ___ buy a car.", a: "would", o: ["will", "would", "shall", "can"] },
+        { q: "Second Conditional: If I won, I ___ buy a car.", a: "would", o: ["will", "would", "shall", "can"] },
         { q: "Modal for permission:", a: "May", o: ["Must", "Should", "May", "Will"] },
         { q: "Sinônimo de 'Huge'?", a: "Enormous", o: ["Small", "Tiny", "Enormous", "Fast"] },
         { q: "He is used to ___ early.", a: "waking up", o: ["wake up", "waking up", "woke up", "wakes up"] },
@@ -101,7 +100,7 @@ const bancoQuestoes = {
         { q: "Meaning of 'Strive'?", a: "Esforçar-se", o: ["Parar", "Esforçar-se", "Gritar", "Correr"] },
         { q: "Sinônimo de 'Albeit'?", a: "Although", o: ["Also", "Although", "Always", "Anyway"] },
         { q: "He denied ___ the car.", a: "stealing", o: ["to steal", "steal", "stealing", "stolen"] },
-        { q: "Meaning of 'To pull someone's leg'?", a: "Zombar", o: ["Puxar a perna", "Zombar", "Ajudar", "Correr"] },
+        { q: "Idiom: 'To pull someone's leg'?", a: "Zombar", o: ["Puxar a perna", "Zombar", "Ajudar", "Correr"] },
         { q: "Passive: 'They will fix it'", a: "It will be fixed", o: ["It will fix", "It will be fixed", "It is fixed", "Fixed it"] },
         { q: "Meaning of 'Hazard'?", a: "Risco", o: ["Sorte", "Risco", "Lugar", "Caminho"] },
         { q: "If only I ___ her name.", a: "knew", o: ["know", "knew", "known", "knowing"] },
@@ -115,46 +114,28 @@ const bancoQuestoes = {
     ]
 };
 
-// --- SEGURANÇA: CHECAGEM DE LOGIN FIXO ---
 app.post('/api/check-auth', (req, res) => {
     const { name, token } = req.body;
-    
-    // Se estiver banido, tchau
     if (bannedUsers.includes(name)) return res.json({ status: 'banned' });
-
-    // Procura se o nome já existe no ranking
     const existingUser = ranking.find(u => u.name === name);
-    
-    if (existingUser) {
-        // Se o nome existe mas o Token é diferente, significa que outro computador está tentando usar o nome
-        if (existingUser.token !== token) {
-            return res.json({ status: 'taken' });
-        }
-    }
-    
+    if (existingUser && existingUser.token !== token) return res.json({ status: 'taken' });
     res.json({ status: 'ok' });
 });
 
 app.post('/api/submit', (req, res) => {
     const { name, grade, score, token } = req.body;
     if (bannedUsers.includes(name)) return res.status(403).send();
-    
     const index = ranking.findIndex(u => u.name === name);
     if (index !== -1) {
-        // Só atualiza se o token bater com o dono original
-        if (ranking[index].token === token) {
-            ranking[index].score = score;
-        }
+        if (ranking[index].token === token) ranking[index].score = score;
     } else {
         ranking.push({ name, grade, score, token, date: new Date().toLocaleTimeString() });
     }
-    
     ranking.sort((a, b) => b.score - a.score);
     logs.push(`[SISTEMA] ${name} atualizou pontos: ${score}`);
     res.json({ s: true });
 });
 
-// --- ADMIN ROUTES ---
 app.get('/api/admin/data', (req, res) => res.json({ ranking, logs, bannedUsers }));
 app.post('/api/admin/ban', (req, res) => {
     const { name } = req.body;
@@ -162,8 +143,7 @@ app.post('/api/admin/ban', (req, res) => {
     ranking = ranking.filter(u => u.name !== name);
     res.json({ s: true });
 });
-
 app.get('/api/questions/:grade', (req, res) => res.json(bancoQuestoes[req.params.grade] || []));
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log("RODANDO SISTEMA"));
+app.listen(PORT, () => console.log("Servidor ativo"));
