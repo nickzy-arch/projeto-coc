@@ -3,118 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>COC English | Challenge</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <title>COC ENGLISH | ULTIMATE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        :root { --p: #6366f1; --bg: #0f172a; --card: #1e293b; --text: #f8fafc; }
-        body { background: var(--bg); color: var(--text); font-family: 'Plus Jakarta Sans', sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; overflow: hidden; }
-        .glass { background: var(--card); padding: 40px; border-radius: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); width: 90%; max-width: 450px; text-align: center; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); animation: fade 0.6s ease; }
-        @keyframes fade { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
-        input, select { width: 100%; padding: 14px; margin: 10px 0; border-radius: 12px; border: 1px solid #334155; background: #0f172a; color: white; box-sizing: border-box; font-size: 1rem; }
-        button { width: 100%; padding: 16px; border-radius: 12px; border: none; background: var(--p); color: white; font-weight: 800; cursor: pointer; transition: 0.3s; margin-top: 10px; }
-        button:hover { filter: brightness(1.2); transform: translateY(-2px); box-shadow: 0 10px 20px rgba(99, 102, 241, 0.4); }
-        .option { background: rgba(255,255,255,0.05); margin: 8px 0; border: 1px solid #334155; text-align: left; padding: 15px; border-radius: 12px; cursor: pointer; transition: 0.2s; }
-        .option:hover { background: rgba(99, 102, 241, 0.1); border-color: var(--p); }
-        .shake { animation: shake 0.4s; }
-        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
+        :root { --neon-dark: #003b00; --neon-bright: #00ff41; --bg: #050505; }
+        body { background: var(--bg); color: white; font-family: 'Fira Code', monospace; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        
+        /* EFEITO RESPIRAÇÃO VERDE */
+        @keyframes pulseGreen {
+            0% { border-color: var(--neon-dark); box-shadow: 0 0 5px var(--neon-dark); }
+            50% { border-color: var(--neon-bright); box-shadow: 0 0 20px var(--neon-bright); }
+            100% { border-color: var(--neon-dark); box-shadow: 0 0 5px var(--neon-dark); }
+        }
+
+        .main-box { 
+            background: #0d0d0d; 
+            border: 2px solid var(--neon-bright); 
+            padding: 40px; 
+            border-radius: 8px; 
+            width: 90%; 
+            max-width: 400px; 
+            text-align: center;
+            animation: pulseGreen 4s infinite ease-in-out; /* A transição suave aqui */
+        }
+
+        h2 { color: var(--neon-bright); text-transform: uppercase; letter-spacing: 2px; }
+        input, select { width: 100%; padding: 12px; margin: 10px 0; background: #000; border: 1px solid #111; color: var(--neon-bright); font-family: inherit; box-sizing: border-box; transition: 0.5s; }
+        input:focus { border-color: var(--neon-bright); outline: none; }
+        
+        button { 
+            width: 100%; padding: 15px; background: var(--neon-bright); color: #000; 
+            border: none; font-weight: bold; cursor: pointer; transition: 0.3s; 
+            text-transform: uppercase; margin-top: 15px; 
+        }
+        button:hover { background: #fff; box-shadow: 0 0 30px var(--neon-bright); }
+
+        .option { border: 1px solid #222; margin: 10px 0; padding: 15px; cursor: pointer; transition: 0.3s; text-align: left; }
+        .option:hover { border-color: var(--neon-bright); background: rgba(0, 255, 65, 0.05); }
     </style>
 </head>
 <body>
-
-    <div id="game-container" class="glass">
-        <h2 id="title">Welcome, Student!</h2>
+    <div id="game-container" class="main-box">
+        <h2 id="display-title">System Access</h2>
         <div id="setup">
-            <input type="text" id="username" placeholder="Seu nome completo">
+            <input type="text" id="username" placeholder="IDENTIFICAÇÃO_DO_ALUNO">
             <select id="grade">
-                <option value="7">7º Ano</option>
-                <option value="8">8º Ano</option>
-                <option value="9">9º Ano</option>
-                <option value="1M">1º Médio</option>
-                <option value="2M">2º Médio</option>
-                <option value="3M">3º Médio</option>
+                <option value="7">7º ANO</option><option value="8">8º ANO</option><option value="9">9º ANO</option>
+                <option value="1M">1º MÉDIO</option><option value="2M">2º MÉDIO</option><option value="3M">3º MÉDIO</option>
             </select>
-            <button onclick="iniciar()">START QUIZ</button>
+            <button onclick="iniciar()">INITIALIZE</button>
         </div>
         <div id="quiz" style="display:none">
-            <h3 id="question-text"></h3>
+            <p id="question-text" style="font-size: 1.1rem; margin-bottom: 20px; color: #ccc;"></p>
             <div id="options-box"></div>
         </div>
     </div>
 
     <script>
         const sfx = {
-            click: new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3'),
             correct: new Audio('https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3'),
             wrong: new Audio('https://assets.mixkit.co/active_storage/sfx/2018/2018-preview.mp3')
         };
-
-        let currentQuestions = [];
-        let index = 0;
-        let score = 0;
+        let currentQuestions = [], index = 0, score = 0;
         let token = localStorage.getItem('userToken') || 'TK' + Math.random().toString(36).substr(2, 9);
         localStorage.setItem('userToken', token);
 
         async function iniciar() {
             const name = document.getElementById('username').value.trim();
-            const grade = document.getElementById('grade').value;
-            if(!name) return alert("Digite seu nome!");
-
-            const auth = await fetch('/api/check-auth', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ name, token })
+            if(!name) return alert("DIGITE O NOME");
+            
+            const auth = await fetch('/api/check-auth', { 
+                method: 'POST', 
+                headers: {'Content-Type': 'application/json'}, 
+                body: JSON.stringify({ name, token }) 
             }).then(r => r.json());
 
-            if(auth.status === 'banned') return alert("❌ Você foi banido pelo professor!");
-            if(auth.status === 'taken') return alert("⚠️ Esse nome já está em uso por outro aluno!");
+            if(auth.status === 'banned') return alert("ACCESS DENIED: BANISHED");
+            if(auth.status === 'taken') return alert("ERROR: NAME IN USE");
 
-            sfx.click.play();
-            currentQuestions = await fetch('/api/questions/' + grade).then(r => r.json());
+            const g = document.getElementById('grade').value;
+            currentQuestions = await fetch('/api/questions/' + g).then(r => r.json());
             document.getElementById('setup').style.display = 'none';
             document.getElementById('quiz').style.display = 'block';
-            proximaQuestao();
+            showQ();
         }
 
-        function proximaQuestao() {
-            if(index >= currentQuestions.length) return finalizar();
+        function showQ() {
+            if(index >= currentQuestions.length) return end();
             const q = currentQuestions[index];
-            document.getElementById('question-text').innerText = q.q;
-            const box = document.getElementById('options-box');
-            box.innerHTML = '';
+            document.getElementById('question-text').innerText = `> ${q.q}`;
+            const box = document.getElementById('options-box'); box.innerHTML = '';
             q.o.forEach(opt => {
-                const btn = document.createElement('div');
-                btn.className = 'option';
-                btn.innerText = opt;
-                btn.onclick = () => checar(opt, q.a, btn);
-                box.appendChild(btn);
+                const d = document.createElement('div'); d.className = 'option'; d.innerText = opt;
+                d.onclick = () => {
+                    if(opt === q.a) { sfx.correct.play(); score += 10; }
+                    else { sfx.wrong.play(); }
+                    index++; setTimeout(showQ, 400);
+                };
+                box.appendChild(d);
             });
         }
 
-        function checar(escolha, correta, elemento) {
-            if(escolha === correta) {
-                sfx.correct.play();
-                score += 10;
-                elemento.style.borderColor = "#10b981";
-                elemento.style.background = "rgba(16, 185, 129, 0.1)";
-            } else {
-                sfx.wrong.play();
-                document.getElementById('game-container').classList.add('shake');
-                setTimeout(() => document.getElementById('game-container').classList.remove('shake'), 400);
-                elemento.style.borderColor = "#ef4444";
-            }
-            index++;
-            setTimeout(proximaQuestao, 600);
-        }
-
-        async function finalizar() {
-            const name = document.getElementById('username').value;
-            const grade = document.getElementById('grade').value;
-            await fetch('/api/submit', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ name, grade, score, token })
+        async function end() {
+            await fetch('/api/submit', { 
+                method: 'POST', 
+                headers: {'Content-Type': 'application/json'}, 
+                body: JSON.stringify({ name: document.getElementById('username').value, grade: document.getElementById('grade').value, score, token }) 
             });
-            document.getElementById('quiz').innerHTML = `<h2>Fim de Jogo!</h2><p style="font-size: 2rem; font-weight:800; color:var(--p)">${score} pts</p><button onclick="location.reload()">VOLTAR</button>`;
+            document.getElementById('quiz').innerHTML = `<h1 style="color:#00ff41">${score} PTS</h1><button onclick="location.reload()">REBOOT</button>`;
         }
     </script>
 </body>
