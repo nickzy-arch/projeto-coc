@@ -123,19 +123,30 @@
             if(auth.status === 'banned') return alert("Acesso restrito.");
             if(auth.status === 'taken') return alert("Nome já em uso.");
 
-            questions = await fetch('/api/start', {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({
-        grade: document.getElementById('grade').value,
-        name: name
-    })
-}).then(r => r.json()).then(data => data.questions);
+            async function iniciar() {
+    const name = document.getElementById('username').value.trim();
+    if(!name) return alert("Digite seu nome!");
 
-            document.getElementById('setup').style.display = 'none';
-            document.getElementById('quiz').style.display = 'block';
-            showQ();
-        }
+    const auth = await fetch('/api/check-auth', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ name, token: currentToken })
+    }).then(r => r.json());
+
+    if(auth.status === 'banned') return alert("Acesso restrito.");
+    if(auth.status === 'taken') return alert("Nome já em uso.");
+
+    let allQuestions = await fetch('/api/questions/' + document.getElementById('grade').value)
+        .then(r => r.json());
+
+    allQuestions.sort(() => Math.random() - 0.5);
+    questions = allQuestions.slice(0, 15);
+
+    document.getElementById('setup').style.display = 'none';
+    document.getElementById('quiz').style.display = 'block';
+    showQ();
+}
+
 
         function showQ() {
             if(idx >= questions.length) return end();
