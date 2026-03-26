@@ -123,7 +123,15 @@
             if(auth.status === 'banned') return alert("Acesso restrito.");
             if(auth.status === 'taken') return alert("Nome já em uso.");
 
-            questions = await fetch('/api/questions/' + document.getElementById('grade').value).then(r => r.json());
+            questions = await fetch('/api/start', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({
+        grade: document.getElementById('grade').value,
+        name: name
+    })
+}).then(r => r.json()).then(data => data.questions);
+
             document.getElementById('setup').style.display = 'none';
             document.getElementById('quiz').style.display = 'block';
             showQ();
