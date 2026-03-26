@@ -116,14 +116,7 @@
             } catch(e) {}
         }
 
-        async function iniciar() {
-            const name = document.getElementById('username').value.trim();
-            if(!name) return alert("Digite seu nome!");
-            const auth = await fetch('/api/check-auth', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ name, token: currentToken }) }).then(r => r.json());
-            if(auth.status === 'banned') return alert("Acesso restrito.");
-            if(auth.status === 'taken') return alert("Nome já em uso.");
-
-            async function iniciar() {
+       async function iniciar() {
     const name = document.getElementById('username').value.trim();
     if(!name) return alert("Digite seu nome!");
 
@@ -139,6 +132,7 @@
     let allQuestions = await fetch('/api/questions/' + document.getElementById('grade').value)
         .then(r => r.json());
 
+    // 🔥 ALEATORIZA + PEGA 15
     allQuestions.sort(() => Math.random() - 0.5);
     questions = allQuestions.slice(0, 15);
 
