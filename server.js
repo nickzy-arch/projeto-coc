@@ -41,7 +41,7 @@ const bancoQuestoes = {
     { q: "Translate: 'Water'", a: "Água", o: ["Fogo", "Terra", "Água", "Ar"] },
     { q: "We ___ friends.", a: "are", o: ["is", "am", "are", "be"] },
     { q: "Birds can ___", a: "fly", o: ["run", "swim", "fly", "walk"] }
-],
+    
     ],
     "8": [
         { q: "Comparative of 'Tall'?", a: "Taller", o: ["Taller", "More tall", "Tallest", "Taller than"] },
